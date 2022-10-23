@@ -5,10 +5,20 @@
  *      Author: massimo
  */
 
-void _Error_Handler(void);
+/// aggiornta la release a joyManage con l'uso del C++
+
 #include "stm32f7xx_hal.h"
 
-char versione[] = "rev. 1.0.0\n";
+char versione[] = "rev. 1.1.0\n";
+
+void Error_Handler(void);
+void CPU_CACHE_Enable(void){
+  /* Enable I-Cache */
+  SCB_EnableICache();
+
+  /* Enable D-Cache */
+  SCB_EnableDCache();
+}
 
 
 /**
@@ -40,14 +50,14 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLQ = 9;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
-	  _Error_Handler();
+    Error_Handler();;
   }
 
     /**Activate the Over-Drive mode
     */
   if (HAL_PWREx_EnableOverDrive() != HAL_OK)
   {
-	  _Error_Handler();
+    Error_Handler();;
   }
 
     /**Initializes the CPU, AHB and APB busses clocks
@@ -61,7 +71,7 @@ void SystemClock_Config(void)
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
   {
-	  _Error_Handler();
+    Error_Handler();;
   }
 
   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_USART6
@@ -72,7 +82,7 @@ void SystemClock_Config(void)
   PeriphClkInitStruct.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();;
   }
 
     /**Configure the Systick interrupt time
@@ -104,21 +114,21 @@ void MX_I2C1_Init(void)
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
   if (HAL_I2C_Init(&hi2c1) != HAL_OK)
   {
-	  _Error_Handler();
+    Error_Handler();;
   }
 
     /**Configure Analogue filter
     */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
-	  _Error_Handler();
+    Error_Handler();;
   }
 
     /**Configure Digital filter
     */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
   {
-	  _Error_Handler();
+    Error_Handler();;
   }
 
 }
@@ -149,7 +159,7 @@ void MX_TIM1_Init(void)
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
@@ -157,7 +167,7 @@ void MX_TIM1_Init(void)
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -170,17 +180,17 @@ void MX_TIM1_Init(void)
   //sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
@@ -196,7 +206,7 @@ void MX_TIM1_Init(void)
   sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
   if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
   /*
    *    PE9     ------> TIM1_CH1
@@ -225,14 +235,14 @@ void MX_TIM3_Init(void)
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -245,12 +255,12 @@ void MX_TIM3_Init(void)
   /// il registro che imposta il duty del PWM e' presente in: htim3.Instance->CCR1, CCR2, CCR3, CCR4
 //  if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
 //  {
-//    _Error_Handler();
+//    Error_Handler();
 //  }
 
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
   /*
    *
@@ -277,14 +287,14 @@ void MX_TIM4_Init(void)
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim4) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
@@ -294,12 +304,12 @@ void MX_TIM4_Init(void)
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
-    _Error_Handler();
+    Error_Handler();
   }
 
 /*

@@ -217,8 +217,6 @@ void TIM5_IRQHandler(void)
 /**
 * @brief This function handles USART3 global interrupt.
 */
-extern char READ_BUFF[];
-extern volatile uint8_t WPTR, RPTR;
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
@@ -226,15 +224,13 @@ void USART3_IRQHandler(void)
   /* USER CODE END USART3_IRQn 0 */
   /// LA FUNZIONE DI SERVIZIO SI TROVA NEL FILE stm32f7xx_hal_uart.c
   HAL_UART_IRQHandler(&huart3);
-  READ_BUFF[WPTR++] = huart3.Instance->RDR;
-  WPTR &= 0x3F;
   //Il nome predefinito e' UART_Receive_IT(huart); ma essendo una routine di servizio
-  // conviene scrivere il codice piï¿½ breve possibile e gestire esplicitamente il buffer di ricezione.
-  // L'impostazione della prioritï¿½ dell'interrupt avviene nel file stm32f7xx_hal_msp.c nella funzione
+  // conviene scrivere il codice più breve possibile e gestire esplicitamente il buffer di ricezione.
+  // L'impostazione della priorità dell'interrupt avviene nel file stm32f7xx_hal_msp.c nella funzione
   // HAL_UART_MspInit(UART_HandleTypeDef* huart)
   // che va richiamata con il descrittore della periferica di cui si vuole abilitare l'interruzione
   // All'interno di tale funzione, un selettore sceglie su quale periferica agire e quindi
-  // ne abilita le caratteristiche, come la prioritï¿½ dell'interruzione.
+  // ne abilita le caratteristiche, come la priorità dell'interruzione.
   /* IMPOSTAZIONE DEL'INTERRUPT PER UART3
   HAL_NVIC_SetPriority(USART3_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(USART3_IRQn);

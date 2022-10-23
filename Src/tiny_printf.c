@@ -284,10 +284,7 @@ int iprintf(const char *fmt, ...)
 
 #include "stm32f7xx_hal.h"
 extern UART_HandleTypeDef huart3;
-/*
- *  USANDO LA SERIALE 3 significa che i messaggi da printf transitano su quella seriale
- *
- *  */
+
 int _write(int fd, char *str, int len){
 	int i = 0;
 	while (i < len){

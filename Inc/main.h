@@ -91,11 +91,13 @@ void Error_Handler(void);
 #define LD2_Pin GPIO_PIN_7
 #define LD2_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-//#define STLK_RX_Pin GPIO_PIN_8
-//#define STLK_RX_GPIO_Port GPIOD
-//#define STLK_TX_Pin GPIO_PIN_9
-//#define STLK_TX_GPIO_Port GPIOD
-
+#define STLK_RX_Pin GPIO_PIN_8
+#define STLK_RX_GPIO_Port GPIOD
+#define STLK_TX_Pin GPIO_PIN_9
+#define STLK_TX_GPIO_Port GPIOD
+#define LD2_Pin GPIO_PIN_7
+#define LD2_GPIO_Port GPIOB
+#define	LD1_Pin 	GPIO_PIN_0
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

@@ -5,9 +5,8 @@
  *      Author: massimo
  */
 
-#include "servomotoreRC.h"
+#include <servomotoreRC.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 servoRC RC[6] = {0};
 
@@ -85,7 +84,7 @@ servoRC RC[6] = {0};
   * @param  puntatore alle struttura del timer che fornisce le uscite PWM.
   * @retval void
   */
-void setRC(servoRC * RCptr, TIM_HandleTypeDef *datiPWM, int numCH){
+void setRC(servoRC * RCptr, TIM_HandleTypeDef *datiPWM, int numCH, tipoMotore *tipo){
 	/// controllo di validita' del dato ricevuto
 	if (datiPWM == NULL){
 		RCptr->TIM_PWM = NULL;
@@ -143,15 +142,15 @@ extern TIM_HandleTypeDef htim4;
   * @retval void
   */
 void initRC(servoRC * RCptr){
-	  setRC(&RC[mano], &htim1, 1);  /// corrisponde al quarto connettore (M4) della scheda arancione
-	  setRC(&RC[polso], &htim1, 2);  /// corrisponde al quinto connettore (M5) della scheda arancione
-	  setRC(&RC[pinza], &htim1, 3);  /// corrisponde al sesto connettore (M6) della scheda arancione
+	  setRC(&RC[3], &htim1, 1, _mano);  /// corrisponde al quarto connettore (M4) della scheda arancione
+	  setRC(&RC[4], &htim1, 2, _polso);  /// corrisponde al quinto connettore (M5) della scheda arancione
+	  setRC(&RC[5], &htim1, 3, _pinza);  /// corrisponde al sesto connettore (M6) della scheda arancione
 	  // inizializza il motore posto su  TIM3  CH2 ( PA7)
 	  //setRC(&RC[3], &htim3, 1);
-	  setRC(&RC[base], &htim3, 2);  /// corrisponde al primo connettore (M1) della scheda arancione
+	  setRC(&RC[0], &htim3, 2, _base);  /// corrisponde al primo connettore (M1) della scheda arancione
 	  // inizializza i motori posti su TIM4 CH3 e CH4 (PD14 e PD15)
-	  setRC(&RC[spalla], &htim4, 3);  /// corrisponde al secondo connettore (M2) della scheda arancione
-	  setRC(&RC[gomito], &htim4, 4);  /// corrisponde al terzo connettore (M3) della scheda arancione
+	  setRC(&RC[1], &htim4, 3, _gomito);  /// corrisponde al secondo connettore (M2) della scheda arancione
+	  setRC(&RC[2], &htim4, 4, _spalla);  /// corrisponde al terzo connettore (M3) della scheda arancione
 }
 
 /**
@@ -171,37 +170,37 @@ void goRC(servoRC * RCptr){
 	uint32_t periodo = RCptr->periodo;
 	int inf, sup, delta;
 	switch(RCptr->motore){
-			case base:
+			case _base:
 				delta = RCptr->delta;
 				inf = (int) (periodo * 0.040);
 				sup = (int) (periodo * 0.130);
 			break;
 
-			case gomito:
+			case _gomito:
 				delta = RCptr->delta;
 				inf = (int) (periodo * 0.040);
 				sup = (int) (periodo * 0.127);
 			break;
 
-			case spalla:
+			case _spalla:
 				delta = RCptr->delta;
 				inf = (int) (periodo * 0.040);
 				sup = (int) (periodo * 0.110);
 			break;
 
-			case mano:
+			case _mano:
 				delta = RCptr->delta;
 				inf = (int) (periodo * 0.040);
 				sup = (int) (periodo * 0.128);
 			break;
 
-			case polso:
+			case _polso:
 				delta = RCptr->delta;
 				inf = (int) (periodo * 0.050);
 				sup = (int) (periodo * 0.1145);
 			break;
 
-			case pinza:
+			case _pinza:
 				delta = RCptr->delta;
 				inf = (int) (periodo * 0.040);
 				sup = (int) (periodo * 0.073);
